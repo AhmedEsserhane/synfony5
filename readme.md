@@ -9,3 +9,4 @@
 
 * php bin/console make:unit-test
 * php bin/phpunit
+* php bin/phpunit --testdox

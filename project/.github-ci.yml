@@ -1,0 +1,43 @@
+image: jakzal/phpqa:php7.4
+
+befor_script:
+  - comoser install
+
+cache:
+  paths:
+    -vendor/
+
+stages:
+  - SecurityChecker
+  - CodingStandards
+  - UnitTests
+
+security-checker:
+  stage: SecurityChecker
+  script:
+    - security-checker security:check comoser.lock
+  allow_faillure: false 
+
+phpcs:
+  stage: CodingStandards
+  script:
+    - phpcs -v --standard=PSR12 --ignore=./src/Kernel.php ./src
+  allow_failure: false
+
+phpcstan:
+  stage: CodingStandards
+  script:
+    - phpcstan analyse ./src
+  allow_failure: false
+
+twig-lint:
+  stage: CodingStandards
+  script:
+    - twig-lint lint ./templates
+  allow_failure: false
+
+phpunit:
+  stage: UnitTests
+  script:
+    - php bin/phpunit
+  allow_failure: false
